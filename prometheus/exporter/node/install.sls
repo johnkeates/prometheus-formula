@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
 {% from "prometheus/map.jinja" import prometheus with context %}
-prometheus_server_tarball:
+node_exporter_tarball:
   archive.extracted:
     - name: {{ prometheus.server.install_dir }}
     - source: {{ prometheus.server.source }}
@@ -9,7 +9,7 @@ prometheus_server_tarball:
     - archive_format: tar
     - if_missing: {{ prometheus.server.version_path }}
 
-prometheus_bin_link:
+node_exporter_bin_link:
   file.symlink:
     - name: /usr/bin/prometheus
     - target: {{ prometheus.server.version_path }}/prometheus
@@ -18,7 +18,7 @@ prometheus_bin_link:
 
 
 
-prometheus_defaults:
+node_exporter_defaults:
   file.managed:
     - name: /etc/default/prometheus
     - source: salt://prometheus/files/default-prometheus.jinja
@@ -30,7 +30,7 @@ prometheus_defaults:
         web_console_templates: {{ prometheus.server.version_path }}/consoles
 
 {%- if prometheus.server.args.storage.local_path is defined %}
-prometheus_storage_local_path:
+node_exporter_storage_local_path:
   file.directory:
     - name: {{ prometheus.server.args.storage.local_path }}
     - user: {{ prometheus.user }}

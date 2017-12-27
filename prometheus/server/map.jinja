@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% import_yaml "prometheus/server/defaults.yaml" as dmap with context %}
+{% import_yaml "prometheus/server/versionmap.yaml" as vmap with context %}
+
+{% set prometheus_server = salt['grains.filter_by'](dmap, merge=salt['pillar.get']('prometheus:server:lookup', salt['grains.get']('prometheus:server:lookup', {}), merge=True), base='default') %}
+
+{% with %}
+
+{% if prometheus_server.version is defined and prometheus_server.version in vmap.versions.keys() %}
+    {% set server_version_id = prometheus_server.version %}
+    {% set server_version_source = vmap.versions[prometheus_server.server.version]["source"] %}
+    {% set server_version_source_hash = vmap.versions[prometheus_server.server.version]["source_hash"] %}
+{% else %}
+    {% set server_version_id = prometheus_server.version %}
+    {% set server_version_source = vmap.versions[vmap.versions.latest]["source"] %}    
+    {% set server_version_source_hash = vmap.versions[vmap.versions.latest]["source_hash"] %}
+{% endif %}
+
+
+{% do prometheus_server.update({
+  'server_version_id': server_version_id,
+  'server_version_source': server_version_source,
+  'server_version_source_hash': server_version_source_hash
+}) %}
+{% endwith %}
+

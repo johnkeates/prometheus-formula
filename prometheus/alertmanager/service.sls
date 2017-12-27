@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
-{% from "prometheus/map.jinja" import prometheus with context %}
+{% from "prometheus/alertmanager/map.jinja" import alertmanager_server with context %}
 
 alertmanager_service_unit:
   file.managed:

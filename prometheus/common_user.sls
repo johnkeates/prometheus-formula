@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{% from "prometheus/server/map.jinja" import prometheus_server as prometheus with context %}
+{% from "prometheus/common_map.jinja" import prometheus_server as prometheus with context %}
 
 prometheus_group:
   group.present:

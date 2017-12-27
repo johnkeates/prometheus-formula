@@ -1,0 +1,13 @@
+prometheus:
+    versions:
+    latest: 2.0.0.linux-amd64
+    1.6.3.linux-amd64:
+        source: https://github.com/prometheus/prometheus/releases/download/v1.6.3/prometheus-1.6.3.linux-amd64.tar.gz
+        source_hash: sha256=bb4e3bf4c9cd2b30fc922e48ab584845739ed4aa50dea717ac76a56951e31b98
+
+alertmanager:
+    versions:
+    latest: 0.12.0-linux-amd64
+    0.12.0-linux-amd64:
+        source: https://github.com/prometheus/alertmanager/releases/download/v0.12.0/alertmanager-0.12.0.linux-amd64.tar.gz
+        source_hash: https://github.com/prometheus/alertmanager/releases/download/v0.12.0/sha256sums.txt

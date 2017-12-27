@@ -1,18 +1,7 @@
-[Unit]
-Description=Monitoring system and time series database
-Documentation=https://prometheus.io/docs/introduction/overview/
-Wants=basic.target
-After=basic.target network.target
+# Defaults for Alertmanager
 
-[Service]
-User=prometheus
-Group=prometheus
-EnvironmentFile=/etc/default/alertmanager
-ExecStart=/usr/bin/alertmanager $ARGS
-ExecReload=/bin/kill -HUP $MAINPID
-KillMode=process
-Restart=always
-RestartSec=42s
+ARGS=--config.file="{{ config_file }}" --web.console.templates="{{ web_console_templates }}" --web.console.libraries="{{ web_console_libraries }}" --storage.tsdb.path="{{ storage_local_path }}"
 
-[Install]
-WantedBy=multi-user.target
+# AWS Settings you may need
+# AWS_ACCESS_KEY_ID = empty
+# AWS_SECRET_ACCESS_KEY = empty

@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
-{% from "prometheus/map.jinja" import prometheus with context %}
+{% from "prometheus/server/map.jinja" import prometheus_server as prometheus with context %}
 
 prometheus_service_unit:
   file.managed:
 {%- if grains.get('init') == 'systemd' %}
     - name: /etc/systemd/system/prometheus.service
-    - source: salt://prometheus/files/prometheus.systemd.jinja
+    - source: salt://prometheus/server/files/prometheus.systemd.jinja
 {%- elif grains.get('init') == 'upstart' %}
     - name: /etc/init/prometheus.conf
-    - source: salt://prometheus/files/prometheus.upstart.jinja
+    - source: salt://prometheus/server/files/prometheus.upstart.jinja
 {%- endif %}
     - watch:
       - file: prometheus_defaults

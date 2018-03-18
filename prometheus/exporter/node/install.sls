@@ -1,42 +1,30 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
-{% from "prometheus/map.jinja" import prometheus with context %}
+{% from "prometheus/exporter/node/map.jinja" import prometheus_exporter_node with context %}
+
+{% set version_path = prometheus_exporter_node.exporter.node.install_dir + prometheus_exporter_node.exporter.node.exporter_node_version_id + "/" %}
+
+# Download the tarball
 node_exporter_tarball:
   archive.extracted:
-    - name: {{ prometheus.server.install_dir }}
-    - source: {{ prometheus.server.source }}
-    - source_hash: {{ prometheus.server.source_hash }}
+    - name: {{ version_path }}
+    - source: {{ prometheus_exporter_node.exporter.node.exporter_node_version_source }}
+    - source_hash: {{ prometheus_exporter_node.exporter.node.exporter_node_version_source_hash }}
     - archive_format: tar
-    - if_missing: {{ prometheus.server.version_path }}
+    - if_missing: {{ version_path }}
 
+# Link the extracted binary to the system path
 node_exporter_bin_link:
   file.symlink:
-    - name: /usr/bin/prometheus
-    - target: {{ prometheus.server.version_path }}/prometheus
+    - name: /usr/bin/node_exporter
+    - target: {{ version_path }}node_exporter-{{ prometheus_exporter_node.exporter.node.exporter_node_version_id }}/node_exporter
     - require:
-      - archive: prometheus_server_tarball
+      - archive: node_exporter_tarball
 
-
-
+# Setup startup settings
 node_exporter_defaults:
   file.managed:
-    - name: /etc/default/prometheus
-    - source: salt://prometheus/files/default-prometheus.jinja
+    - name: {{ prometheus_exporter_node.exporter.node.defaults_file }}
+    - source: salt://prometheus/exporter/node/files/node_exporter.defaults.jinja
     - template: jinja
-    - defaults:
-        config_file: {{ prometheus.server.args.config_file }}
-        storage_local_path: {{ prometheus.server.args.storage.local_path }}
-        web_console_libraries: {{ prometheus.server.version_path }}/console_libraries
-        web_console_templates: {{ prometheus.server.version_path }}/consoles
-
-{%- if prometheus.server.args.storage.local_path is defined %}
-node_exporter_storage_local_path:
-  file.directory:
-    - name: {{ prometheus.server.args.storage.local_path }}
-    - user: {{ prometheus.user }}
-    - group: {{ prometheus.group }}
-    - makedirs: True
-    - watch:
-      - file: prometheus_defaults
-{%- endif %}
-
+    - dataset_pillar: prometheus_exporter_node:exporter:node:args

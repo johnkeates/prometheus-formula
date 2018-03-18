@@ -6,10 +6,15 @@ default:
   home: /var/lib/prometheus
   server:
     install_dir: /opt/prometheus/
+    discovery:
+      file:
+        target_file: /var/lib/prometheus/targets/saltnodes.json
     args:
       config_file: /etc/prometheus/prometheus.yml
       storage:
         local_path: /var/lib/prometheus/metrics
+        targets: /var/lib/prometheus/targets
+
     default_version: "2.0.0.linux-amd64"
     versions:
       1.6.3.linux-amd64:

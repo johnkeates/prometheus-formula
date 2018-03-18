@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+# Defaults from the YAML for the node exporter
+{% import_yaml "prometheus/exporter/node/defaults.yaml" as dmap with context %}
+
+# List of available releases, currently manually copied straight from github
+{% import_yaml "prometheus/exporter/node/versionmap.yaml" as vmap with context %}
+
+# Set the variable that we want to use in our states, and enrich it with our defaults while overriding them with pillar lookups
+# base=default refers to the base yaml node in defaults.yaml
+# the pillar.get refers to the pillar node we use for user overrides
+{% set prometheus_exporter_node = salt['grains.filter_by'](dmap, merge=salt['pillar.get']('prometheus:exporter:node:lookup', salt['grains.get']('prometheus:exporter:node:lookup', {}), merge=True), base='default') %}
+
+{% with %}
+
+# Set a few conditions to get a usable version string
+
+{% if prometheus_exporter_node.version is defined and prometheus_exporter_node.version in vmap.versions.keys() %}
+    {% set exporter_node_version_id = prometheus_exporter_node.version %}
+    {% set exporter_node_version_source = vmap.versions[prometheus_exporter_node.exporter.nodeversion]["source"] %}
+    {% set exporter_node_version_source_hash = vmap.versions[prometheus_exporter_node.exporter.node.version]["source_hash"] %}
+{% else %}
+    {% set exporter_node_version_id = prometheus_exporter_node.version %}
+    {% set exporter_node_version_source = vmap.versions[vmap.versions.latest]["source"] %}    
+    {% set exporter_node_version_source_hash = vmap.versions[vmap.versions.latest]["source_hash"] %}
+{% endif %}
+
+# And then expose them in the pillar tree
+
+{% do prometheus_exporter_node.update({
+  'exporter_node_version_id': exporter_node_version_id,
+  'exporter_node_version_source': exporter_node_version_source,
+  'exporter_node_version_source_hash': exporter_node_version_source_hash
+}) %}
+{% endwith %}
+

@@ -1,0 +1,14 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+default:
+  exporter:
+    node:
+      user: prometheus
+      group: prometheus
+      home: /var/lib/prometheus
+      default_version: "0.15.2.linux-amd64" # Deletos, delet this. Use latest version by default unless overriden by user.
+      install_dir: /opt/node_exporter/
+      defaults_file: /etc/default/node_exporter
+      args: # implement this 
+        - placeholder
+        - another_place_holder

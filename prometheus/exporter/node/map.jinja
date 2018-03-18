@@ -15,13 +15,19 @@
 {% with %}
 
 # Set a few conditions to get a usable version string
+{% set custom_version = False %}
 
-{% if prometheus_exporter_node.version is defined and prometheus_exporter_node.version in vmap.versions.keys() %}
+{% if prometheus_exporter_node.version is defined %}
+{% if prometheus_exporter_node.version in vmap.versions.keys() %}
     {% set exporter_node_version_id = prometheus_exporter_node.version %}
     {% set exporter_node_version_source = vmap.versions[prometheus_exporter_node.exporter.nodeversion]["source"] %}
     {% set exporter_node_version_source_hash = vmap.versions[prometheus_exporter_node.exporter.node.version]["source_hash"] %}
-{% else %}
-    {% set exporter_node_version_id = prometheus_exporter_node.version %}
+    {% set custom_version = True %}
+{% endif %}
+{% endif %}
+
+{% if custom_version == False %}
+    {% set exporter_node_version_id = vmap.versions.latest %}
     {% set exporter_node_version_source = vmap.versions[vmap.versions.latest]["source"] %}    
     {% set exporter_node_version_source_hash = vmap.versions[vmap.versions.latest]["source_hash"] %}
 {% endif %}

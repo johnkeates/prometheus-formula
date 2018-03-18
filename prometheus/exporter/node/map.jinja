@@ -28,7 +28,7 @@
 
 # And then expose them in the pillar tree
 
-{% do prometheus_exporter_node.update({
+{% do prometheus_exporter_node.exporter.node.update({
   'exporter_node_version_id': exporter_node_version_id,
   'exporter_node_version_source': exporter_node_version_source,
   'exporter_node_version_source_hash': exporter_node_version_source_hash

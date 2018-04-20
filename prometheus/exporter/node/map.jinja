@@ -20,7 +20,7 @@
 {% if prometheus_exporter_node.version is defined %}
 {% if prometheus_exporter_node.version in vmap.versions.keys() %}
     {% set exporter_node_version_id = prometheus_exporter_node.version %}
-    {% set exporter_node_version_source = vmap.versions[prometheus_exporter_node.exporter.nodeversion]["source"] %}
+    {% set exporter_node_version_source = vmap.versions[prometheus_exporter_node.exporter.node.version]["source"] %}
     {% set exporter_node_version_source_hash = vmap.versions[prometheus_exporter_node.exporter.node.version]["source_hash"] %}
     {% set custom_version = True %}
 {% endif %}

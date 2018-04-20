@@ -1,17 +1,16 @@
-{# [
-  {
-    "targets": [ "<host>", ... ],
-    "labels": {
-      "<labelname>": "<labelvalue>", ...
-    }
-  },
-  ...
-] #}
 [
   {
-    "targets": [ "0.0.0.0:9090"],
+    "targets": [
+      {%- set comma = False -%}
+      {%- for host, data in salt['mine.get']('*', 'prometheus_node_exporter').items() -%}
+      {%- if comma == True -%}
+,{%- endif %}
+      "{{ data }}" 
+      {%- set comma = True -%}
+{%- endfor -%}
+    ],
     "labels": {
-      "targetlist": "failsafe"
+      "targetlist": "salt-sd"
     }
   }
 ]

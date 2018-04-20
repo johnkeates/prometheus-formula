@@ -1,0 +1,43 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+# Defaults from the YAML for the haproxy exporter
+{% import_yaml "prometheus/exporter/haproxy/defaults.yaml" as dmap with context %}
+
+# List of available releases, currently manually copied straight from github
+{% import_yaml "prometheus/exporter/haproxy/versionmap.yaml" as vmap with context %}
+
+# Set the variable that we want to use in our states, and enrich it with our defaults while overriding them with pillar lookups
+# base=default refers to the base yaml haproxy in defaults.yaml
+# the pillar.get refers to the pillar node we use for user overrides
+{% set prometheus_exporter_haproxy = salt['grains.filter_by'](dmap, merge=salt['pillar.get']('prometheus:exporter:haproxy:lookup', salt['grains.get']('prometheus:exporter:haproxy:lookup', {}), merge=True), base='default') %}
+
+{% with %}
+
+# Set a few conditions to get a usable version string
+{% set custom_version = False %}
+
+{% if prometheus_exporter_haproxy.version is defined %}
+{% if prometheus_exporter_haproxy.version in vmap.versions.keys() %}
+    {% set exporter_haproxy_version_id = prometheus_exporter_haproxy.version %}
+    {% set exporter_haproxy_version_source = vmap.versions[prometheus_exporter_haproxy.exporter.haproxy.version]["source"] %}
+    {% set exporter_haproxy_version_source_hash = vmap.versions[prometheus_exporter_haproxy.exporter.haproxy.version]["source_hash"] %}
+    {% set custom_version = True %}
+{% endif %}
+{% endif %}
+
+{% if custom_version == False %}
+    {% set exporter_haproxy_version_id = vmap.versions.latest %}
+    {% set exporter_haproxy_version_source = vmap.versions[vmap.versions.latest]["source"] %}    
+    {% set exporter_haproxy_version_source_hash = vmap.versions[vmap.versions.latest]["source_hash"] %}
+{% endif %}
+
+# And then expose them in the pillar tree
+
+{% do prometheus_exporter_haproxy.exporter.haproxy.update({
+  'exporter_haproxy_version_id': exporter_haproxy_version_id,
+  'exporter_haproxy_version_source': exporter_haproxy_version_source,
+  'exporter_haproxy_version_source_hash': exporter_haproxy_version_source_hash
+}) %}
+{% endwith %}
+

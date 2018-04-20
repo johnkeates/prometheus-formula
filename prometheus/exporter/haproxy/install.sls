@@ -1,42 +1,30 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
-{% from "prometheus/map.jinja" import prometheus with context %}
-prometheus_server_tarball:
+{% from "prometheus/exporter/haproxy/map.jinja" import prometheus_exporter_haproxy with context %}
+
+{% set version_path = prometheus_exporter_haproxy.exporter.haproxy.install_dir + prometheus_exporter_haproxy.exporter.haproxy.exporter_haproxy_version_id + "/" %}
+
+# Download the tarball
+haproxy_exporter_tarball:
   archive.extracted:
-    - name: {{ prometheus.server.install_dir }}
-    - source: {{ prometheus.server.source }}
-    - source_hash: {{ prometheus.server.source_hash }}
+    - name: {{ version_path }}
+    - source: {{ prometheus_exporter_haproxy.exporter.haproxy.exporter_haproxy_version_source }}
+    - source_hash: {{ prometheus_exporter_haproxy.exporter.haproxy.exporter_haproxy_version_source_hash }}
     - archive_format: tar
-    - if_missing: {{ prometheus.server.version_path }}
+    - if_missing: {{ version_path }}
 
-prometheus_bin_link:
+# Link the extracted binary to the system path
+haproxy_exporter_bin_link:
   file.symlink:
-    - name: /usr/bin/prometheus
-    - target: {{ prometheus.server.version_path }}/prometheus
+    - name: /usr/bin/haproxy_exporter
+    - target: {{ version_path }}haproxy_exporter-{{ prometheus_exporter_haproxy.exporter.haproxy.exporter_haproxy_version_id }}/haproxy_exporter
     - require:
-      - archive: prometheus_server_tarball
+      - archive: haproxy_exporter_tarball
 
-
-
-prometheus_defaults:
+# Setup startup settings
+haproxy_exporter_defaults:
   file.managed:
-    - name: /etc/default/prometheus
-    - source: salt://prometheus/files/default-prometheus.jinja
+    - name: {{ prometheus_exporter_haproxy.exporter.haproxy.defaults_file }}
+    - source: salt://prometheus/exporter/haproxy/files/haproxy_exporter.defaults.jinja
     - template: jinja
-    - defaults:
-        config_file: {{ prometheus.server.args.config_file }}
-        storage_local_path: {{ prometheus.server.args.storage.local_path }}
-        web_console_libraries: {{ prometheus.server.version_path }}/console_libraries
-        web_console_templates: {{ prometheus.server.version_path }}/consoles
-
-{%- if prometheus.server.args.storage.local_path is defined %}
-prometheus_storage_local_path:
-  file.directory:
-    - name: {{ prometheus.server.args.storage.local_path }}
-    - user: {{ prometheus.user }}
-    - group: {{ prometheus.group }}
-    - makedirs: True
-    - watch:
-      - file: prometheus_defaults
-{%- endif %}
-
+    - dataset_pillar: prometheus_exporter_haproxy:exporter:haproxy:args

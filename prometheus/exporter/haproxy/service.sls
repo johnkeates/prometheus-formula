@@ -1,27 +1,22 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
-{% from "prometheus/map.jinja" import prometheus with context %}
+{% from "prometheus/exporter/haproxy/map.jinja" import prometheus_exporter_haproxy as prometheus with context %}
 
-prometheus_service_unit:
+haproxy_exporter_service_unit:
   file.managed:
-{%- if grains.get('init') == 'systemd' %}
-    - name: /etc/systemd/system/prometheus.service
-    - source: salt://prometheus/files/prometheus.systemd.jinja
-{%- elif grains.get('init') == 'upstart' %}
-    - name: /etc/init/prometheus.conf
-    - source: salt://prometheus/files/prometheus.upstart.jinja
-{%- endif %}
+    - name: /etc/systemd/system/haproxy_exporter.service
+    - source: salt://prometheus/exporter/haproxy/files/haproxy_exporter.systemd.jinja
+    - template: jinja
     - watch:
-      - file: prometheus_defaults
+      - file: haproxy_exporter_defaults
     - require_in:
-      - file: prometheus_service
+      - file: haproxy_exporter_service
 
-prometheus_service:
+haproxy_exporter_service:
   service.running:
-    - name: prometheus_node
+    - name: haproxy_exporter
     - enable: True
     - reload: True
     - watch:
-      - file: prometheus_service_unit
-      - file: prometheus_server_config
-      - file: prometheus_bin_link
+      - file: haproxy_exporter_service_unit
+      - file: haproxy_exporter_bin_link

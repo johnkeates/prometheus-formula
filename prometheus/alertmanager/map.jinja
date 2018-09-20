@@ -4,7 +4,7 @@
 {% import_yaml "prometheus/alertmanager/defaults.yaml" as dmap with context %}
 {% import_yaml "prometheus/alertmanager/versionmap.yaml" as vmap with context %}
 
-{% set alertmanager_server = salt['grains.filter_by'](dmap, merge=salt['pillar.get']('prometheus:alertmanager:lookup', salt['grains.get']('prometheus:alertmanager:lookup', {}), merge=True), base='default') %}
+{% set alertmanager_server = salt['grains.filter_by'](dmap, merge=salt['pillar.get']('prometheus:alertmanager:lookup', salt['grains.get']('prometheus:alertmanager:lookup', {}), merge=True), base='prometheus') %}
 
 {% with %}
 

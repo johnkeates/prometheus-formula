@@ -4,7 +4,7 @@
 {% import_yaml "prometheus/server/defaults.yaml" as dmap with context %}
 {% import_yaml "prometheus/server/versionmap.yaml" as vmap with context %}
 
-{% set prometheus_server = salt['grains.filter_by'](dmap, merge=salt['pillar.get']('prometheus:server:lookup', salt['grains.get']('prometheus:server:lookup', {}), merge=True), base='default') %}
+{% set prometheus_server = salt['grains.filter_by'](dmap, merge=salt['pillar.get']('prometheus:server:lookup', salt['grains.get']('prometheus:server:lookup', {}), merge=True), base='prometheus') %}
 
 {% with %}
 

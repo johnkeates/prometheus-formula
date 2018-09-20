@@ -28,7 +28,7 @@ alertmanager_defaults:
     - source: salt://prometheus/alertmanager/files/default-prometheus.jinja
     - template: jinja
     - defaults:
-        config_file: {{ alertmanager_server.alertmanager.args.config_file }}
+        config_file: {{ alertmanager_server.args.config_file }}
         storage_local_path: {{ alertmanager_server.args.storage.local_path }}
         web_console_libraries: {{ alertmanager_server.version_path }}/console_libraries
         web_console_templates: {{ alertmanager_server.version_path }}/consoles

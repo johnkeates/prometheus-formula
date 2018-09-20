@@ -2,6 +2,7 @@
 # vim: ft=sls
 {% from "prometheus/server/map.jinja" import prometheus_server as prometheus with context %}
 
+
 {% set version_path = prometheus.server.install_dir + prometheus.server.default_version + "/" %}
 # Download the tarball
 prometheus_server_tarball:

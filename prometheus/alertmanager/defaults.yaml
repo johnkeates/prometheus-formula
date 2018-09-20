@@ -2,7 +2,7 @@
 # vim: ft=yaml
 default:
   alertmanager:
-    instal_dir: /opt/prometheus/
+    install_dir: /opt/prometheus/
     args:
       config_file: /etc/prometheus/alertmanager.yml
       storage:

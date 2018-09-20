@@ -8,4 +8,4 @@ alertmanager_server_config:
     - name: {{ alertmanager_server.alertmanager.args.config_file }}
     - user: {{ prometheus_server.user }}
     - group: {{ prometheus_server.group }}
-    - dataset_pillar: prometheus:alertmanager:config
+    - dataset_pillar: alertmanager_server:config

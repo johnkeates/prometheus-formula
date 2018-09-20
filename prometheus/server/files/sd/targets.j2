@@ -1,12 +1,11 @@
 [
   {
     "targets": [
-      {%- set comma = False -%}
-      {%- for host, data in salt['mine.get']('*', 'grains.items')['prometheus_node_exporter'].items() -%}
-      {%- if comma == True -%}
-,{%- endif %}
-      "{{ data }}" 
-      {%- set comma = True -%}
+      {%- for k, v in salt['mine.get']('*', 'grains.items').items() -%}
+"{{ v['prometheus_node_exporter'] }}"
+{%- if not loop.last -%}
+, 
+{%- endif -%}
 {%- endfor -%}
     ],
     "labels": {

@@ -8,8 +8,8 @@
 alertmanager_server_tarball:
   archive.extracted:
     - name: {{ version_path }}
-    - source: {{ alertmanager_server.alertmanager.server_version_source }}
-    - source_hash: {{ alertmanager_server.alertmanager.server_version_source_hash }}
+    - source: {{ alertmanager_server.alertmanager.alertmanager_version_source }}
+    - source_hash: {{ alertmanager_server.alertmanager.alertmanager_version_source_hash }}
     - archive_format: tar
     - if_missing: {{ version_pathh }}
 

@@ -30,8 +30,8 @@ alertmanager_defaults:
     - defaults:
         config_file: {{ alertmanager_server.alertmanager.args.config_file }}
         storage_local_path: {{ alertmanager_server.alertmanager.args.storage.local_path }}
-        web_console_libraries: {{ alertmanager_server.alertmanager.version_path }}/console_libraries
-        web_console_templates: {{ alertmanager_server.alertmanager.version_path }}/consoles
+        web_console_libraries: {{ version_path }}alertmanager-{{ alertmanager_server.alertmanager.default_version }}/console_libraries
+        web_console_templates: {{ version_path }}alertmanager-{{ alertmanager_server.alertmanager.default_version }}/consoles
 
 # Configure path for local storage
 {%- if alertmanager_server.alertmanager.args.storage.local_path is defined %}

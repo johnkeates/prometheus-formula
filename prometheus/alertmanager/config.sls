@@ -3,6 +3,8 @@
 {% from "prometheus/alertmanager/map.jinja" import alertmanager_server with context %}
 {% from "prometheus/server/map.jinja" import prometheus_server with context %}
 
+{{prometheus:alertmanager:config|pprint}}
+
 alertmanager_server_config:
   file.serialize:
     - name: {{ alertmanager_server.alertmanager.args.config_file }}

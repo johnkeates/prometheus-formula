@@ -25,7 +25,7 @@ alertmanager_bin_link:
 alertmanager_defaults:
   file.managed:
     - name: /etc/default/alertmanager
-    - source: salt://prometheus/alertmanager/files/default-prometheus.jinja
+    - source: salt://prometheus/alertmanager/files/alertmanager.defaults.jinja
     - template: jinja
     - defaults:
         config_file: {{ alertmanager_server.alertmanager.args.config_file }}

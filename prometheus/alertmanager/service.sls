@@ -6,15 +6,15 @@ alertmanager_service_unit:
   file.managed:
 {%- if grains.get('init') == 'systemd' %}
     - name: /etc/systemd/system/alertmanager.service
-    - source: salt://alertmanager/files/alertmanager.systemd.jinja
+    - source: salt://prometheus/alertmanager/files/alertmanager.systemd.jinja
 {%- elif grains.get('init') == 'upstart' %}
     - name: /etc/init/alertmanager.conf
-    - source: salt://alertmanager/files/alertmanager.upstart.jinja
+    - source: salt://prometheus/alertmanager/files/alertmanager.upstart.jinja
 {%- endif %}
     - watch:
-      - file: prometheus_defaults
+      - file: alertmanager_defaults
     - require_in:
-      - file: prometheus_service
+      - file: alertmanager_service
 
 alertmanager_service:
   service.running:

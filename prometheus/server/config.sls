@@ -9,3 +9,13 @@ prometheus_server_config:
     - user: {{ prometheus.user }}
     - group: {{ prometheus.group }}
     - dataset_pillar: prometheus:server:config
+
+
+
+prometheus_alerting_config:
+  file.serialize:
+    - makedirs: True
+    - name: {{ prometheus.server.args.alerting_rules_file }}
+    - user: {{ prometheus.user }}
+    - group: {{ prometheus.group }}
+    - dataset_pillar: prometheus_alerting_rules

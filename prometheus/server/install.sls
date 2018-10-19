@@ -44,3 +44,13 @@ prometheus_storage_local_path:
     - watch:
       - file: prometheus_defaults
 {%- endif %}
+{%- if prometheus.server.args.alerting_rules_dir is defined %}
+prometheus_storage_alerts_dir:
+  file.directory:
+    - name: {{ prometheus.server.args.alerting_rules_dir }}
+    - user: {{ prometheus.user }}
+    - group: {{ prometheus.group }}
+    - makedirs: True
+    - watch:
+      - file: prometheus_defaults
+{%- endif %}

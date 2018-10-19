@@ -11,7 +11,8 @@ default:
         target_file: /var/lib/prometheus/targets/saltnodes.json
     args:
       config_file: /etc/prometheus/prometheus.yml
-      alerting_rules_file: /etc/prometheus/prometheus_alerting_rules.yml
+      alerting_rules_dir: /etc/prometheus/alerts
+      alerting_rules_file: /etc/prometheus/alerts/prometheus_alerting_rules.yml
       storage:
         local_path: /var/lib/prometheus/metrics
         targets: /var/lib/prometheus/targets

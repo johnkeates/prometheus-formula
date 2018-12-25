@@ -2,9 +2,11 @@
   {
     "targets": [
       {%- for k, v in salt['mine.get']('*', 'grains.items').items() -%}
+{%- if 'prometheus_node_exporter' in v -%}
 "{{ v['prometheus_node_exporter'] }}"
 {%- if not loop.last -%}
 , 
+{%- endif -%}
 {%- endif -%}
 {%- endfor -%}
     ],

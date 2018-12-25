@@ -3,6 +3,7 @@
 default:
   exporter:
     node:
+      enable_mine_registration: true
       user: prometheus
       group: prometheus
       home: /var/lib/prometheus

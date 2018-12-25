@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+# Pull the common defaults
+{% import_yaml "prometheus/common_defaults.yaml" as common_defaults with context %}
+
+# Pull the common versionmap
+{% import_yaml "prometheus/common_versionmap.yaml" as common_versionmap with context %}
+
+# Get the pillar default overrides and overlay them on top of common_defaults
+{% set prometheus_common = salt['grains.filter_by'](common_defaults, merge=salt['pillar.get']('prometheus:common:lookup', salt['grains.get']('prometheus:common:lookup', {}), merge=True), base='default') %}
+
+
+## FIXME
+
+## this doesn't work because it assumes common default is set with one version string,
+## but the common vmap has a version for each product so it doesn't apply here. Maybe versions should be self-contained...
+
+{% with %}
+
+{% if prometheus_common.version is defined and prometheus_common.version in common_versionmap.versions.keys() %}
+    {% set server_version_id = prometheus_common.version %}
+    {% set server_version_source = common_versionmap.versions[prometheus_common.server.version]["source"] %}
+    {% set server_version_source_hash = common_versionmap.versions[prometheus_common.server.version]["source_hash"] %}
+{% else %}
+    {% set server_version_id = prometheus_common.version %}
+    {% set server_version_source = common_versionmap.versions[common_versionmap.versions.latest]["source"] %}    
+    {% set server_version_source_hash = common_versionmap.versions[common_versionmap.versions.latest]["source_hash"] %}
+{% endif %}
+
+
+{% do prometheus_common.update({
+  'server_version_id': server_version_id,
+  'server_version_source': server_version_source,
+  'server_version_source_hash': server_version_source_hash
+}) %}
+{% endwith %}

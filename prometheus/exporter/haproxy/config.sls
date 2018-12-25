@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
-{% from "prometheus/map.jinja" import prometheus with context %}
+{% from "prometheus/exporter/haproxy/map.jinja" import prometheus_exporter_haproxy with context %}
 
-prometheus_server_config:
-  file.serialize:
-    - name: {{ prometheus.server.args.config_file }}
-    - user: {{ prometheus.user }}
-    - group: {{ prometheus.group }}
-    - dataset_pillar: prometheus:server:config
+# This file doesn't really do anything at this time
+
+# prometheus_exporter_haproxy_defaults_config:
+#   file.managed:
+#     - name: {{ prometheus_exporter_haproxy.exporter.haproxy.defaults_file }}
+#     - user: {{ prometheus_exporter_haproxy.exporter.haproxy.user }}
+#     - group: {{ prometheus_exporter_haproxy.exporter.haproxy.group }}
+#     - source: prometheus/exporter/haproxy/files/haproxy_exporter.defaults.jinja
+#     - dataset_pillar: prometheus_exporter_haproxy:exporter:haproxy:args

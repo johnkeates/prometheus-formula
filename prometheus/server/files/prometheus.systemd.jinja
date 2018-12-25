@@ -5,14 +5,15 @@ Wants=basic.target
 After=basic.target network.target
 
 [Service]
+Restart=always
 User=prometheus
 Group=prometheus
 EnvironmentFile=/etc/default/prometheus
 ExecStart=/usr/bin/prometheus $ARGS
 ExecReload=/bin/kill -HUP $MAINPID
-KillMode=process
-Restart=always
-RestartSec=42s
+RestartSec=20s
+TimeoutStopSec=20s
+SendSIGKILL=no
 
 [Install]
 WantedBy=multi-user.target

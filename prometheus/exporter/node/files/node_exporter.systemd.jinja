@@ -1,18 +1,16 @@
+{%- from "prometheus/exporter/node/map.jinja" import prometheus_exporter_node with context -%}
 [Unit]
-Description=Monitoring system and time series database
-Documentation=https://prometheus.io/docs/introduction/overview/
-Wants=basic.target
-After=basic.target network.target
+Description=Prometheus exporter for machine metrics
+Documentation=https://github.com/prometheus/node_exporter
 
 [Service]
-User=prometheus
-Group=prometheus
-EnvironmentFile=/etc/default/prometheus
-ExecStart=/usr/bin/prometheus $ARGS
-ExecReload=/bin/kill -HUP $MAINPID
-KillMode=process
 Restart=always
-RestartSec=42s
+User=prometheus
+EnvironmentFile={{ prometheus_exporter_node.exporter.node.defaults_file }}
+ExecStart=/usr/bin/node_exporter $OPTIONS
+ExecReload=/bin/kill -HUP $MAINPID
+TimeoutStopSec=20s
+SendSIGKILL=no
 
 [Install]
 WantedBy=multi-user.target

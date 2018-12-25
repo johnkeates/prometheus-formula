@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+# vim: ft=jinja
+
+{% import_yaml "prometheus/alertmanager/defaults.yaml" as dmap with context %}
+{% import_yaml "prometheus/alertmanager/versionmap.yaml" as vmap with context %}
+
+{% set alertmanager_server = salt['grains.filter_by'](dmap, merge=salt['pillar.get']('prometheus:alertmanager:lookup', salt['grains.get']('prometheus:alertmanager:lookup', {}), merge=True), base='prometheus') %}
+
+{% with %}
+
+{% if alertmanager_server.version is defined and alertmanager_server.version in vmap.versions.keys() %}
+    {% set alertmanager_version_id = alertmanager_server.version %}
+    {% set alertmanager_version_source = vmap.versions[alertmanager_server.alertmanager.version]["source"] %}
+    {% set alertmanager_version_source_hash = vmap.versions[alertmanager_server.alertmanager.version]["source_hash"] %}
+{% else %}
+    {% set alertmanager_version_id = alertmanager_server.version %}
+    {% set alertmanager_version_source = vmap.versions[vmap.versions.latest]["source"] %}    
+    {% set alertmanager_version_source_hash = vmap.versions[vmap.versions.latest]["source_hash"] %}
+{% endif %}
+
+
+{% do alertmanager_server.update({
+  'alertmanager_version_id': alertmanager_version_id,
+  'alertmanager_version_source': alertmanager_version_source,
+  'alertmanager_version_source_hash': alertmanager_version_source_hash
+}) %}
+{% endwith %}
+

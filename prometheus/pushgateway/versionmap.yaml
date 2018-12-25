@@ -1,0 +1,6 @@
+pushgateway:
+    versions:
+    latest: 0.3.1.linux-amd64
+    0.3.1.linux-amd64:
+        source: https://github.com/prometheus/pushgateway/releases/download/v0.3.1/pushgateway-0.3.1.linux-amd64.tar.gz
+        source_hash: sha256=cfa8938d20c0495fcac007ffe24c6327547483e3090a247bb3f72b37a2584185
